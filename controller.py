@@ -1,37 +1,23 @@
-import pyautogui
-import screen_brightness_control as sbc
-from config import BRIGHTNESS_STEP
+import subprocess
 
 def perform_action(gesture, lm=None):
-    if gesture == "FIST":
-        pyautogui.press("playpause")
+    """Maps a gesture to an ADB keycode and executes the command directly."""
+    gesture_to_keycode = {
+        "FIST": "85",   # Play / Pause (KEYCODE_MEDIA_PLAY_PAUSE)
+        "INDEX": "24",  # Volume Up (KEYCODE_VOLUME_UP)
+        "TWO": "25",    # Volume Down (KEYCODE_VOLUME_DOWN)
+        "THREE": "221", # Brightness Up (KEYCODE_BRIGHTNESS_UP)
+        "FOUR": "220",  # Brightness Down (KEYCODE_BRIGHTNESS_DOWN)
+        "ROCK": "22",
+        "PINKY": "21",
+    }
 
-    elif gesture == "INDEX":
-        pyautogui.press("volumeup")
-
-    elif gesture == "TWO":
-        pyautogui.press("volumedown")
-
-    elif gesture == "THREE":
+    keycode = gesture_to_keycode.get(gesture)
+    if keycode:
+        # Use the full path to adb.exe
+        adb_path = r"C:\Users\Techsupport4\Downloads\platform-tools-latest-windows\platform-tools\adb.exe"
+        command = [adb_path, "shell", "input", "keyevent", keycode]
         try:
-            current_brightness = sbc.get_brightness()[0]
-        except Exception:
-            current_brightness = 50
-
-        new_brightness = min(current_brightness + BRIGHTNESS_STEP, 100)
-        sbc.set_brightness(new_brightness)
-
-    elif gesture == "FOUR":
-        try:
-            current_brightness = sbc.get_brightness()[0]
-        except Exception:
-            current_brightness = 50
-
-        new_brightness = max(current_brightness - BRIGHTNESS_STEP, 0)
-        sbc.set_brightness(new_brightness)
-
-    elif gesture == "ROCK":
-        pyautogui.press("right")
-
-    elif gesture == "PINKY":
-        pyautogui.press("left")
+            subprocess.Popen(command)
+        except FileNotFoundError:
+            print(f"Error: ADB executable not found at: {adb_path}")

@@ -1,15 +1,22 @@
 """
-Gesture Controlled Smart Remote (STABLE VERSION)
+Gesture Controlled Smart Remote (ADB Android Version)
 
 Gestures:
-✊ Fist           → Play / Pause
-☝ Index only     → Volume Up
-✌ Index + Middle → Volume Down
-3 Fingers        → Brightness Up
-4 Fingers        → Brightness Down
-🤘 Rock           → Forward
-🤙 Pinky          → Backward
+✊ Fist           → Play / Pause (ADB 85)
+☝ Index only     → Volume Up (ADB 24)
+✌ Index + Middle → Volume Down (ADB 25)
+3 Fingers        → Brightness Up (ADB 221)
+4 Fingers        → Brightness Down (ADB 220)
+🤘 Rock           → Forward (ADB 22)
+🤙 Pinky          → Backward (ADB 21)
 """
+
+import sys
+from unittest.mock import MagicMock
+# Mock matplotlib to prevent errors since it is excluded from the build
+sys.modules["matplotlib"] = MagicMock()
+sys.modules["matplotlib.pyplot"] = MagicMock()
+sys.modules["matplotlib.animation"] = MagicMock()
 
 import cv2
 import time
